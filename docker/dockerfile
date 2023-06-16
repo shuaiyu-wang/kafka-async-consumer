@@ -1,0 +1,6 @@
+FROM openjdk:8-jre-alpine
+WORKDIR /opt/ptyk
+COPY app.jar ./
+COPY entrypoint.sh /entrypoint.sh
+#VOLUME /opt/ptyk/config
+CMD ["/bin/sh", "/entrypoint.sh"]
