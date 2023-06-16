@@ -8,4 +8,4 @@ if [ ! "$JAVA_OPTS" ]; then
 fi
 
 
-java $JAVA_OPTS  $profile  -Djava.security.egd=file:/dev/./urandom  -jar /opt/ptyk/app.jar
+java $JAVA_OPTS  $profile  -Djava.security.egd=file:/dev/./urandom  -jar /opt/csyy/app.jar

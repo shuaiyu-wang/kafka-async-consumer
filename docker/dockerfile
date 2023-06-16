@@ -1,5 +1,5 @@
 FROM openjdk:8-jre-alpine
-WORKDIR /opt/ptyk
+WORKDIR /opt/csyy
 COPY app.jar ./
 COPY entrypoint.sh /entrypoint.sh
 #VOLUME /opt/ptyk/config
