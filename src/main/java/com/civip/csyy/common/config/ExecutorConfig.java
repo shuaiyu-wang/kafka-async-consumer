@@ -21,7 +21,7 @@ public class ExecutorConfig {
         threadPoolTaskExecutor.setKeepAliveSeconds(60);
         threadPoolTaskExecutor.setThreadNamePrefix("global_thread_pool_task_executor");
         threadPoolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-        threadPoolTaskExecutor.setAwaitTerminationSeconds(60);
+        threadPoolTaskExecutor.setAwaitTerminationSeconds(120);
         threadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         threadPoolTaskExecutor.initialize();
         return threadPoolTaskExecutor;

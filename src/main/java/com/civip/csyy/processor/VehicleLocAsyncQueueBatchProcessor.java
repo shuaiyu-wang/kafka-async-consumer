@@ -1,22 +1,23 @@
-package com.civip.csyy.service;
+package com.civip.csyy.processor;
 
 import com.civip.csyy.dao.VehicleLocBatchInsertDao;
 import com.civip.csyy.model.VehicleLoc;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
 
 /**
  * @author: create by wangshuaiyu
  * @date: 2023/6/16
  */
-@Service
-public class VehicleLocAbstractAsyncQueueService extends AbstractAsyncQueueService<VehicleLoc> {
-    public VehicleLocAbstractAsyncQueueService() {
+public class VehicleLocAsyncQueueBatchProcessor extends AbstractAsyncQueueBatchProcessor<VehicleLoc> {
+    public VehicleLocAsyncQueueBatchProcessor() {
         super();
+    }
+
+    public VehicleLocAsyncQueueBatchProcessor(int queueSize, int batchSize, int batchIntervalOfMs) {
+        super(queueSize, batchSize, batchIntervalOfMs);
     }
 
     @Autowired

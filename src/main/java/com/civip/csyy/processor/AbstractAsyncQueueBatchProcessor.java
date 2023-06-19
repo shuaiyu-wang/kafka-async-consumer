@@ -1,4 +1,4 @@
-package com.civip.csyy.service;
+package com.civip.csyy.processor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,22 +12,32 @@ import java.util.concurrent.*;
  * @author: create by wangshuaiyu
  * @date: 2023/6/15
  */
-public abstract class AbstractAsyncQueueService<T> implements CommandLineRunner, DisposableBean {
+public abstract class AbstractAsyncQueueBatchProcessor<T> implements DisposableBean {
 
-    private final static Logger logger = LoggerFactory.getLogger(AbstractAsyncQueueService.class);
+    private final static Logger logger = LoggerFactory.getLogger(AbstractAsyncQueueBatchProcessor.class);
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private int queueSize = 2000;
     private int batchSize = 400;
     private int batchIntervalOfMs = 10000;
-    private final ArrayBlockingQueue<T> queue = new ArrayBlockingQueue<>(batchSize);
+    private final ArrayBlockingQueue<T> queue = new ArrayBlockingQueue<>(queueSize);
     private volatile boolean running = true;
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-    public AbstractAsyncQueueService() {
+    public AbstractAsyncQueueBatchProcessor() {
     }
 
-    public AbstractAsyncQueueService(int batchSize, int batchIntervalOfMs) {
+    public AbstractAsyncQueueBatchProcessor(int queueSize, int batchSize, int batchIntervalOfMs) {
+        this.queueSize = queueSize;
         this.batchSize = batchSize;
         this.batchIntervalOfMs = batchIntervalOfMs;
+    }
+
+    public void put(T t) {
+        try {
+            queue.put(t);
+        } catch (InterruptedException e) {
+            logger.warn("写入内存队列的阻塞状态被中断。");
+        }
     }
 
     private void consume() {
@@ -44,7 +54,7 @@ public abstract class AbstractAsyncQueueService<T> implements CommandLineRunner,
                     try {
                         Thread.sleep(100L);
                     } catch (InterruptedException e) {
-                        logger.error("内存队列 消费线程的sleep被中断了，剩余未处理数据量：{}", queue.size());
+                        logger.warn("内存队列 消费线程的sleep被中断了，剩余未处理数据量：{}", queue.size());
                     }
                 }
             }
@@ -53,12 +63,6 @@ public abstract class AbstractAsyncQueueService<T> implements CommandLineRunner,
             handle(queue.size());
             countDownLatch.countDown();
             logger.info("内存队列 消费线程安全关闭。");
-        }
-    }
-
-    public void put(T t) {
-        if (!queue.offer(t)) {
-            logger.warn("内存队列已满！");
         }
     }
 
@@ -76,8 +80,7 @@ public abstract class AbstractAsyncQueueService<T> implements CommandLineRunner,
 
     protected abstract void doHandle(ArrayList<T> ts) throws Exception;
 
-    @Override
-    public void run(String[] args) {
+    public void start() {
         executorService.execute(()-> {
             try {
                 consume();

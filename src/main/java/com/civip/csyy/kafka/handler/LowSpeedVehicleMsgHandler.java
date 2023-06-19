@@ -4,7 +4,7 @@ import com.civip.csyy.annotation.KafkaMsgHandler;
 import com.civip.csyy.common.enums.MsgTypeEnum;
 import com.civip.csyy.domain.CsyyVehicleLocDTO;
 import com.civip.csyy.model.VehicleLoc;
-import com.civip.csyy.service.VehicleLocAbstractAsyncQueueService;
+import com.civip.csyy.processor.VehicleLocAsyncQueueBatchProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class LowSpeedVehicleMsgHandler extends AbstractKafkaMsgHandler{
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    private VehicleLocAbstractAsyncQueueService vehicleLocAbstractAsyncQueueService;
+    private VehicleLocAsyncQueueBatchProcessor vehicleLocAbstractAsyncQueueService;
 
     @Override
     protected void doHandle(String msg) throws Exception{
